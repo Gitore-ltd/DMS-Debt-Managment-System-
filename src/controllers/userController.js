@@ -18,14 +18,15 @@ class userController {
           .json({ status: 400, error: user.error.details[0].message });
       }
       const existingUser = await User.findOne({ where: { email } });
-      if (existingUser !== null) return res.status(409).json({ error: 'Email has already taken.' });
+      if (existingUser !== null)
+        return res.status(409).json({ error: 'Email is already taken!' });
       if (password !== confirmPassword) {
         return res
           .status(500)
           .json({ error: 'Password does not match, please try again!' });
       }
       const hashedPassword = bcrypt.hashSync(password, 10);
-      const newData = { email, password: hashedPassword };
+      const newData = { email, password: hashedPassword, role: 'customer' };
       const token = generateToken({
         email,
       });
@@ -36,8 +37,8 @@ class userController {
         jwtoken: token,
         data: newUser,
       });
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      return res.status(500).json({ status: 500, Error: error });
     }
   }
 
@@ -45,7 +46,6 @@ class userController {
     try {
       const { email, password } = req.body;
       const user = userSchema.validate({ email, password });
-
       if (user.error) {
         return res
           .status(400)
@@ -59,7 +59,7 @@ class userController {
       }
       const passwordMatch = await bcrypt.compare(
         password,
-        existingUser.password,
+        existingUser.password
       );
       if (passwordMatch === false) {
         return res
@@ -72,8 +72,8 @@ class userController {
         message: 'user successfuly registered',
         jwtoken: token,
       });
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      return res.status(500).json({ status: 500, Error: error.message });
     }
   }
 }
