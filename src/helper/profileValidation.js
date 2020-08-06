@@ -12,6 +12,7 @@ const userSchema = Joi.object().keys({
   address: Joi.string().alphanum().min(2),
   dateOfBirth: Joi.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   nationalId: Joi.number(),
+  profileImage: Joi.string(),
   // .error(() => ({
   //   message: 'Invalid national Id',
   // })),

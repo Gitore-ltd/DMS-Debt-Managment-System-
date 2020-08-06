@@ -1,4 +1,8 @@
 package-lock.json
 
 .env
+
 node_modules
+
+// this folder holds images 
+tmp
