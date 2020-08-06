@@ -11,6 +11,6 @@ route.get('/api/v1/auth/login', userController.login);
 
 // profile
 route.get('/api/v1/getProfile', auth.auth, userProfile.getProfile);
-route.patch('/api/v1/updateProfile', auth.auth, userProfile.updateProfile);
+route.patch('/api/v1/updateProfile', auth.autuserProfile.updateProfile);
 
 export default route;

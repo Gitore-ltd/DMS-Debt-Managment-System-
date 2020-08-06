@@ -1,4 +1,7 @@
 import dotenv from 'dotenv';
+import multer from 'multer';
+import cloudinary from 'cloudinary';
+import cloudinaryStorage from 'multer-storage-cloudinary';
 import { User } from '../database/models';
 import profileValidation from '../helper/profileValidation';
 
@@ -16,6 +19,15 @@ export default class userProfile {
 
   static async updateProfile(req, res) {
     try {
+      cloudinary.v2.config({
+        cloud_name: process.env.CLOUD_NAME,
+        api_key: process.env.API_KEY,
+        api_secret: process.env.API_SECRET,
+      });
+      const file = req.files.profileImage;
+
+      const imageLink = await cloudinary.uploader.upload(file.tempFilePath);
+
       const {
         firstName,
         lastName,
@@ -24,6 +36,9 @@ export default class userProfile {
         nationalId,
       } = req.body;
 
+      let { profileImage } = req.body;
+      profileImage = imageLink.url;
+
       const user = profileValidation.validate({
         email: req.user.email,
         firstName,
@@ -31,6 +46,7 @@ export default class userProfile {
         dateOfBirth,
         telephone,
         nationalId,
+        profileImage,
       });
 
       if (user.error) {
@@ -38,7 +54,7 @@ export default class userProfile {
           .status(400)
           .json({ status: 400, error: user.error.details[0].message });
       }
-      User.update(req.body, { where: { email: req.user.email } })
+      User.update(user.value, { where: { email: req.user.email } })
 
         .then(() => User.findOne({ where: { email: req.user.email } }))
         .then((user) => {
