@@ -24,9 +24,13 @@ export default class userProfile {
         api_key: process.env.API_KEY,
         api_secret: process.env.API_SECRET,
       });
-      const file = req.files.profileImage;
 
-      const imageLink = await cloudinary.uploader.upload(file.tempFilePath);
+      let imageLink = null;
+
+      if (req.files) {
+        const file = req.files.profileImage;
+        imageLink = await cloudinary.uploader.upload(file.tempFilePath);
+      }
 
       const {
         firstName,
@@ -37,7 +41,7 @@ export default class userProfile {
       } = req.body;
 
       let { profileImage } = req.body;
-      profileImage = imageLink.url;
+      profileImage = imageLink ? imageLink.url : 'no image found';
 
       const user = profileValidation.validate({
         email: req.user.email,
