@@ -156,6 +156,20 @@ class products {
       message: 'Product deleted successfully!',
     });
   }
+
+  static async viewAllProducts(req, res) {
+    const allProducts = await Product.findAll();
+    if (allProducts.length === 0) {
+      return res.status(404).json({
+        status: 404,
+        message: 'No product found',
+      });
+    }
+    return res.status(200).json({
+      status: 200,
+      allProducts,
+    });
+  }
 }
 
 export default products;
