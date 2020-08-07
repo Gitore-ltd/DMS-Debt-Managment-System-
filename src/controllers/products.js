@@ -137,6 +137,25 @@ class products {
       });
     }
   }
+
+  static async deleteProduct(req, res) {
+    const existingProduct = await Product.findOne({
+      where: { title: req.body.title },
+    });
+    if (!existingProduct) {
+      return res.status(404).json({
+        status: 404,
+        error: 'Product does not exist, please check gain the title!',
+      });
+    }
+    await Product.destroy({
+      where: { title: req.body.title },
+    });
+    return res.status(200).json({
+      status: 200,
+      message: 'Product deleted successfully!',
+    });
+  }
 }
 
 export default products;
