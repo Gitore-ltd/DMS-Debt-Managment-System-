@@ -1,5 +1,5 @@
 import express from 'express';
-import userController from '../controllers/userController';
+import userController from '../controllers/user';
 import userProfile from '../controllers/userProfile';
 import auth from '../middleware/checkAuth';
 import isAdmin from '../middleware/isAdmin';
@@ -18,5 +18,6 @@ route.patch('/api/v1/updateProfile', auth.auth, userProfile.updateProfile);
 
 // Product
 route.post('/api/v1/addProduct', auth.auth, isAdmin, product.addProduct);
+route.patch('/api/v1/updateProduct', auth.auth, isAdmin, product.updateProduct);
 
 export default route;
