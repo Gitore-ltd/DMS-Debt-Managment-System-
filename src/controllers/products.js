@@ -170,6 +170,28 @@ class products {
       allProducts,
     });
   }
+
+  static async viewOneProduct(req, res) {
+    if (req.body.title === undefined) {
+      return res.status(400).json({
+        status: 400,
+        message: 'To search, Please type the product title!',
+      });
+    }
+    const oneProduct = await Product.findOne({
+      where: { title: req.body.title },
+    });
+    if (oneProduct === null) {
+      return res.status(404).json({
+        status: 404,
+        message: 'No product found',
+      });
+    }
+    return res.status(200).json({
+      status: 200,
+      oneProduct,
+    });
+  }
 }
 
 export default products;
