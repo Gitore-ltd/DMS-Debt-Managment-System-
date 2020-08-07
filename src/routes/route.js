@@ -20,5 +20,6 @@ route.patch('/api/v1/updateProfile', auth.auth, userProfile.updateProfile);
 route.post('/api/v1/addProduct', auth.auth, isAdmin, product.addProduct);
 route.patch('/api/v1/updateProduct', auth.auth, isAdmin, product.updateProduct);
 route.delete('/api/v1/deleteProduct', auth.auth, isAdmin, product.deleteProduct);
+route.get('/api/v1/viewAllProducts', auth.auth, product.viewAllProducts);
 
 export default route;
