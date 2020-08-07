@@ -18,8 +18,7 @@ class userController {
           .json({ status: 400, error: user.error.details[0].message });
       }
       const existingUser = await User.findOne({ where: { email } });
-      if (existingUser !== null)
-        return res.status(409).json({ error: 'Email is already taken!' });
+      if (existingUser !== null) return res.status(409).json({ error: 'Email is already taken!' });
       if (password !== confirmPassword) {
         return res
           .status(500)
@@ -59,7 +58,7 @@ class userController {
       }
       const passwordMatch = await bcrypt.compare(
         password,
-        existingUser.password
+        existingUser.password,
       );
       if (passwordMatch === false) {
         return res
