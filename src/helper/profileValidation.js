@@ -8,7 +8,7 @@ const userSchema = Joi.object().keys({
   // phone is required
   // and must be a string of the format XXX-XXX-XXX
   // where X is a digit (0-9)
-  telephone: Joi.string().regex(/^\d{3}-\d{3}-\d{4}$/),
+  telephone: Joi.number(),
   address: Joi.string().alphanum().min(2),
   dateOfBirth: Joi.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   nationalId: Joi.number(),

@@ -4,6 +4,8 @@ import userProfile from '../controllers/userProfile';
 import auth from '../middleware/checkAuth';
 import isAdmin from '../middleware/isAdmin';
 import product from '../controllers/products';
+import isCustomer from '../middleware/isCustomer';
+import loan from '../controllers/requests';
 // import imageUploader from '../middleware/imageUploader';
 
 const route = express.Router();
@@ -23,5 +25,8 @@ route.get('/api/v1/viewAllProducts', auth.auth, product.viewAllProducts);
 route.delete('/api/v1/deleteProduct', auth.auth, isAdmin, product.deleteProduct);
 route.get('/api/v1/viewAllProducts', auth.auth, product.viewAllProducts);
 route.get('/api/v1/viewOneProduct', auth.auth, product.viewOneProduct);
+
+// request
+route.post('/api/v1/requestLoan', auth.auth, isCustomer, loan.requestLoan);
 
 export default route;

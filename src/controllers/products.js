@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import cloudinary from 'cloudinary';
+import { v4 as uuidv4 } from 'uuid';
 import { Product } from '../database/models';
 import productValidation from '../helper/productValidation';
 
@@ -29,11 +30,15 @@ class products {
         description,
       } = req.body;
 
+      const titleInLowerCase = title.toLowerCase();
+
       let { productImage } = req.body;
       productImage = imageLink ? imageLink.url : 'no image found';
 
       const product = productValidation.validate({
-        title,
+        productId: uuidv4(),
+        email: req.user.email,
+        title: titleInLowerCase,
         quality,
         unit,
         availableQuantity,
@@ -48,7 +53,7 @@ class products {
           .json({ status: 400, error: product.error.details[0].message });
       }
 
-      const existingProduct = await Product.findOne({ where: { title } });
+      const existingProduct = await Product.findOne({ where: { title: titleInLowerCase } });
 
       if (existingProduct) {
         return res.status(409).json({
@@ -65,6 +70,7 @@ class products {
         data: newProduct,
       });
     } catch (error) {
+      console.log(error);
       return res.status(500).json({
         status: 500,
         Error: error.message,
