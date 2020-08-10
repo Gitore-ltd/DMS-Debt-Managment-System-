@@ -20,13 +20,13 @@ module.exports = {
     logging: false,
   },
   production: {
-    username: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_NAME,
+    username: process.env.User,
+    password: process.env.Password,
+    database: process.env.Database,
     host: process.env.HOST,
-    url: process.env.DATABASE_URL,
+    url: process.env.URI,
     dialect: 'postgres',
-    host_name: process.env.HOST_NAME,
+    host_name: process.env.Heroku_CLI,
     logging: false,
   },
 };

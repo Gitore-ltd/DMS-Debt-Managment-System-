@@ -11,6 +11,7 @@ class userController {
     try {
       const { email, password, confirmPassword } = req.body;
       const user = userSchema.validate({ email, password });
+      const role = 'customer';
 
       if (user.error) {
         return res
@@ -18,16 +19,18 @@ class userController {
           .json({ status: 400, error: user.error.details[0].message });
       }
       const existingUser = await User.findOne({ where: { email } });
-      if (existingUser !== null) return res.status(409).json({ error: 'Email is already taken!' });
+      if (existingUser !== null)
+        return res.status(409).json({ error: 'Email is already taken!' });
       if (password !== confirmPassword) {
         return res
           .status(500)
           .json({ error: 'Password does not match, please try again!' });
       }
       const hashedPassword = bcrypt.hashSync(password, 10);
-      const newData = { email, password: hashedPassword, role: 'customer' };
+      const newData = { email, password: hashedPassword, role };
       const token = generateToken({
         email,
+        role,
       });
       const newUser = await User.create(newData);
       return res.status(201).json({
@@ -51,6 +54,17 @@ class userController {
           .json({ status: 400, error: user.error.details[0].message });
       }
       const existingUser = await User.findOne({ where: { email } });
+      const {
+        firstName,
+        lastName,
+        dateOfBirth,
+        telephone,
+        nationalId,
+        role,
+        address,
+      } = existingUser;
+
+
       if (existingUser == null) {
         return res
           .status(404)
@@ -58,14 +72,24 @@ class userController {
       }
       const passwordMatch = await bcrypt.compare(
         password,
-        existingUser.password,
+        existingUser.password
       );
       if (passwordMatch === false) {
         return res
           .status(400)
           .json({ status: 400, error: 'Email or password is incorrect' });
       }
-      const token = generateToken({ email });
+      const token = generateToken({
+        email,
+        firstName,
+        lastName,
+        dateOfBirth,
+        telephone,
+        nationalId,
+        role,
+        address,
+      });
+      
       return res.status(200).json({
         status: 200,
         message: 'user successfuly registered',

@@ -4,17 +4,23 @@ import userProfile from '../controllers/userProfile';
 import auth from '../middleware/checkAuth';
 import isAdmin from '../middleware/isAdmin';
 import product from '../controllers/products';
+import isCustomer from '../middleware/isCustomer';
+import loan from '../controllers/requests';
+import seller from '../controllers/manager';
 // import imageUploader from '../middleware/imageUploader';
 
 const route = express.Router();
 
 // registration
 route.post('/api/v1/auth/signup', userController.signup);
-route.get('/api/v1/auth/login', userController.login);
+route.post('/api/v1/auth/login', userController.login);
 
 // profile
 route.get('/api/v1/getProfile', auth.auth, userProfile.getProfile);
 route.patch('/api/v1/updateProfile', auth.auth, userProfile.updateProfile);
+
+// user search
+route.get('/api/v1/findUser', auth.auth, userProfile.findUser);
 
 // Product
 route.post('/api/v1/addProduct', auth.auth, isAdmin, product.addProduct);
@@ -23,5 +29,15 @@ route.get('/api/v1/viewAllProducts', auth.auth, product.viewAllProducts);
 route.delete('/api/v1/deleteProduct', auth.auth, isAdmin, product.deleteProduct);
 route.get('/api/v1/viewAllProducts', auth.auth, product.viewAllProducts);
 route.get('/api/v1/viewOneProduct', auth.auth, product.viewOneProduct);
+
+// request
+route.post('/api/v1/requestLoan', auth.auth, loan.requestLoan);
+route.get('/api/v1/myRequets', auth.auth, loan.myRequests);
+route.get('/api/v1/findRequest', auth.auth, loan.findRequest);
+
+// manager
+route.get('/api/v1/AllRequests', auth.auth, isAdmin, seller.viewAllRequests);
+route.patch('/api/v1/ApproveRequest', auth.auth, isAdmin, seller.ApproveRequest);
+route.patch('/api/v1/RejectRequest', auth.auth, isAdmin, seller.RejectRequest);
 
 export default route;

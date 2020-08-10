@@ -38,6 +38,8 @@ export default class userProfile {
         dateOfBirth,
         telephone,
         nationalId,
+        role,
+        address,
       } = req.body;
 
       let { profileImage } = req.body;
@@ -51,6 +53,8 @@ export default class userProfile {
         telephone,
         nationalId,
         profileImage,
+        role,
+        address,
       });
 
       if (user.error) {
@@ -67,6 +71,31 @@ export default class userProfile {
     } catch (error) {
       return res.status(500).json({
         status: 500,
+        Error: error.message,
+      });
+    }
+  }
+
+  static async findUser(req, res) {
+    try {
+      const foundUser = await User.findOne({
+        where: { email: req.headers.email },
+      });
+
+      const userInfo = foundUser ? foundUser.dataValues : '';
+
+      if (userInfo.length) {
+        return res.status(404).json({
+          status: 404,
+          message: 'no user found',
+        });
+      }
+      return res.status(200).json({
+        status: 200,
+        userInfo,
+      });
+    } catch (error) {
+      return res.status(500).json({
         Error: error.message,
       });
     }
