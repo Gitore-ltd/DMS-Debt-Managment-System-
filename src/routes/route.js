@@ -8,6 +8,7 @@ import isCustomer from '../middleware/isCustomer';
 import loan from '../controllers/requests';
 import seller from '../controllers/manager';
 // import imageUploader from '../middleware/imageUploader';
+import isSuperAdmin from '../middleware/isSuperAdmin';
 
 const route = express.Router();
 
@@ -26,7 +27,12 @@ route.get('/api/v1/findUser', auth.auth, userProfile.findUser);
 route.post('/api/v1/addProduct', auth.auth, isAdmin, product.addProduct);
 route.patch('/api/v1/updateProduct', auth.auth, isAdmin, product.updateProduct);
 route.get('/api/v1/viewAllProducts', auth.auth, product.viewAllProducts);
-route.delete('/api/v1/deleteProduct', auth.auth, isAdmin, product.deleteProduct);
+route.delete(
+  '/api/v1/deleteProduct',
+  auth.auth,
+  isAdmin,
+  product.deleteProduct,
+);
 route.get('/api/v1/viewAllProducts', auth.auth, product.viewAllProducts);
 route.get('/api/v1/viewOneProduct', auth.auth, product.viewOneProduct);
 
@@ -37,7 +43,15 @@ route.get('/api/v1/findRequest', auth.auth, loan.findRequest);
 
 // manager
 route.get('/api/v1/AllRequests', auth.auth, isAdmin, seller.viewAllRequests);
-route.patch('/api/v1/ApproveRequest', auth.auth, isAdmin, seller.ApproveRequest);
+route.patch(
+  '/api/v1/ApproveRequest',
+  auth.auth,
+  isAdmin,
+  seller.ApproveRequest,
+);
 route.patch('/api/v1/RejectRequest', auth.auth, isAdmin, seller.RejectRequest);
+
+// admin
+route.get('/api/v1/findAll', auth.auth, isSuperAdmin, userProfile.findAllUser);
 
 export default route;
