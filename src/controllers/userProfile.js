@@ -100,4 +100,27 @@ export default class userProfile {
       });
     }
   }
+
+  static async findAllUser(req, res) {
+    try {
+      const findAllUsers = await User.findAll({
+        attributes: ['firstName', 'lastName', 'email', 'telephone', 'nationalId', 'profileImage', 'address', 'dateOfBirth', 'role'],
+      });
+
+      if (findAllUsers.length === 0) {
+        return res.status(404).json({
+          status: 404,
+          message: 'no user found',
+        });
+      }
+      return res.status(200).json({
+        status: 200,
+        findAllUsers,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        Error: error.message,
+      });
+    }
+  }
 }
