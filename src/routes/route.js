@@ -53,5 +53,6 @@ route.patch('/api/v1/RejectRequest', auth.auth, isAdmin, seller.RejectRequest);
 
 // admin
 route.get('/api/v1/findAll', auth.auth, isSuperAdmin, userProfile.findAllUser);
+route.delete('/api/v1/deleteUser', auth.auth, isSuperAdmin, userProfile.deleteUser);
 
 export default route;

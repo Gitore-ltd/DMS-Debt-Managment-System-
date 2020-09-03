@@ -104,7 +104,17 @@ export default class userProfile {
   static async findAllUser(req, res) {
     try {
       const findAllUsers = await User.findAll({
-        attributes: ['firstName', 'lastName', 'email', 'telephone', 'nationalId', 'profileImage', 'address', 'dateOfBirth', 'role'],
+        attributes: [
+          'firstName',
+          'lastName',
+          'email',
+          'telephone',
+          'nationalId',
+          'profileImage',
+          'address',
+          'dateOfBirth',
+          'role',
+        ],
       });
 
       if (findAllUsers.length === 0) {
@@ -116,6 +126,31 @@ export default class userProfile {
       return res.status(200).json({
         status: 200,
         findAllUsers,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        Error: error.message,
+      });
+    }
+  }
+
+  static async deleteUser(req, res) {
+    try {
+      const foundUser = await User.findOne({
+        where: { email: req.headers.email },
+      });
+      const userInfo = foundUser ? foundUser.dataValues : '';
+
+      if (userInfo.length === 0) {
+        return res.status(404).json({
+          status: 404,
+          message: 'no user found',
+        });
+      }
+      await User.destroy({ where: { email: req.headers.email } });
+      return res.status(200).json({
+        status: 200,
+        message: 'user successfully deleted',
       });
     } catch (error) {
       return res.status(500).json({
