@@ -158,4 +158,40 @@ export default class userProfile {
       });
     }
   }
+
+  static async updateUserRole(req, res) {
+    try {
+      const { role } = req.body;
+
+      const foundUser = await User.findOne({
+        where: { email: req.headers.email },
+      });
+
+      const userInfo = foundUser ? foundUser.dataValues : '';
+
+      if (userInfo.length === 0) {
+        return res.status(404).json({
+          status: 404,
+          message: 'no user found',
+        });
+      }
+
+      if (userInfo.role === role) {
+        return res.status(400).json({
+          status: 200,
+          message: 'user\'s role already updated',
+        });
+      }
+
+      await User.update({ role }, { where: { email: req.headers.email } });
+      return res.status(200).json({
+        status: 200,
+        message: 'user role successfuly update',
+      });
+    } catch (error) {
+      return res.status(500).json({
+        Error: error.message,
+      });
+    }
+  }
 }
