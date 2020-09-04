@@ -6,7 +6,6 @@ import { User } from '../database/models';
 import profileValidation from '../helper/profileValidation';
 
 dotenv.config();
-
 export default class userProfile {
   static async getProfile(req, res) {
     try {
@@ -24,46 +23,26 @@ export default class userProfile {
         api_key: process.env.API_KEY,
         api_secret: process.env.API_SECRET,
       });
-
       let imageLink = null;
-
       if (req.files) {
         const file = req.files.profileImage;
         imageLink = await cloudinary.uploader.upload(file.tempFilePath);
       }
-
-      const {
-        firstName,
-        lastName,
-        dateOfBirth,
-        telephone,
-        nationalId,
-        role,
-        address,
-      } = req.body;
-
-      let { profileImage } = req.body;
-      profileImage = imageLink ? imageLink.url : 'no image found';
+      const { firstName, lastName, telephone, nationalId, address, profileImage } = req.body;
 
       const user = profileValidation.validate({
         email: req.user.email,
         firstName,
         lastName,
-        dateOfBirth,
         telephone,
         nationalId,
         profileImage,
-        role,
         address,
       });
-
       if (user.error) {
-        return res
-          .status(400)
-          .json({ status: 400, error: user.error.details[0].message });
+        return res.status(400).json({ status: 400, error: user.error.details[0].message });
       }
       User.update(user.value, { where: { email: req.user.email } })
-
         .then(() => User.findOne({ where: { email: req.user.email } }))
         .then((user) => {
           res.status(200).json({ status: 200, user });
@@ -81,9 +60,7 @@ export default class userProfile {
       const foundUser = await User.findOne({
         where: { email: req.headers.email },
       });
-
       const userInfo = foundUser ? foundUser.dataValues : '';
-
       if (userInfo.length) {
         return res.status(404).json({
           status: 404,
@@ -112,11 +89,9 @@ export default class userProfile {
           'nationalId',
           'profileImage',
           'address',
-          'dateOfBirth',
           'role',
         ],
       });
-
       if (findAllUsers.length === 0) {
         return res.status(404).json({
           status: 404,
@@ -140,7 +115,6 @@ export default class userProfile {
         where: { email: req.headers.email },
       });
       const userInfo = foundUser ? foundUser.dataValues : '';
-
       if (userInfo.length === 0) {
         return res.status(404).json({
           status: 404,
@@ -151,6 +125,42 @@ export default class userProfile {
       return res.status(200).json({
         status: 200,
         message: 'user successfully deleted',
+      });
+    } catch (error) {
+      return res.status(500).json({
+        Error: error.message,
+      });
+    }
+  }
+
+  static async updateUserRole(req, res) {
+    try {
+      const { role } = req.body;
+
+      const foundUser = await User.findOne({
+        where: { email: req.headers.email },
+      });
+
+      const userInfo = foundUser ? foundUser.dataValues : '';
+
+      if (userInfo.length === 0) {
+        return res.status(404).json({
+          status: 404,
+          message: 'no user found',
+        });
+      }
+
+      if (userInfo.role === role) {
+        return res.status(400).json({
+          status: 200,
+          message: "user's role already updated",
+        });
+      }
+
+      await User.update({ role }, { where: { email: req.headers.email } });
+      return res.status(200).json({
+        status: 200,
+        message: 'user role successfuly update',
       });
     } catch (error) {
       return res.status(500).json({

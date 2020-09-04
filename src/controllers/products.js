@@ -28,14 +28,15 @@ class products {
         price,
         unit,
         description,
+        productImage
       } = req.body;
       let titleInLowerCase = 'no title'
      if(title){
        titleInLowerCase = title.toLowerCase();
      }
 
-      let { productImage } = req.body;
-      productImage = imageLink ? imageLink.url : 'no image found';
+      // let { productImage } = req.body;
+      // productImage = imageLink ? imageLink.url : 'no image found';
 
       const product = productValidation.validate({
         productId: uuidv4(),
