@@ -9,12 +9,22 @@ import loan from '../controllers/requests';
 import seller from '../controllers/manager';
 // import imageUploader from '../middleware/imageUploader';
 import isSuperAdmin from '../middleware/isSuperAdmin';
+import passport from '../config/passport';
 
 const route = express.Router();
+
+ const { socialLogin } = userController;
 
 // registration
 route.post('/api/v1/auth/signup', userController.signup);
 route.post('/api/v1/auth/login', userController.login);
+
+// social logins
+route.get('/auth/login/socialLogin', (req, res) => {
+  res.sendFile('socialLogin.html', { root: `${__dirname}/../templates/` });
+});
+route.get('/auth/login/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+route.get('/auth/login/google/redirect', passport.authenticate('google'), socialLogin);
 
 // profile
 route.get('/api/v1/getProfile', auth.auth, userProfile.getProfile);
@@ -27,12 +37,7 @@ route.get('/api/v1/findUser', auth.auth, userProfile.findUser);
 route.post('/api/v1/addProduct', auth.auth, isAdmin, product.addProduct);
 route.patch('/api/v1/updateProduct', auth.auth, isAdmin, product.updateProduct);
 route.get('/api/v1/viewAllProducts', auth.auth, product.viewAllProducts);
-route.delete(
-  '/api/v1/deleteProduct',
-  auth.auth,
-  isAdmin,
-  product.deleteProduct,
-);
+route.delete('/api/v1/deleteProduct', auth.auth, isAdmin, product.deleteProduct);
 route.get('/api/v1/viewAllProducts', auth.auth, product.viewAllProducts);
 route.get('/api/v1/viewOneProduct', auth.auth, product.viewOneProduct);
 
@@ -43,12 +48,7 @@ route.get('/api/v1/findRequest', auth.auth, loan.findRequest);
 
 // manager
 route.get('/api/v1/AllRequests', auth.auth, isAdmin, seller.viewAllRequests);
-route.patch(
-  '/api/v1/ApproveRequest',
-  auth.auth,
-  isAdmin,
-  seller.ApproveRequest,
-);
+route.patch('/api/v1/ApproveRequest', auth.auth, isAdmin, seller.ApproveRequest);
 route.patch('/api/v1/RejectRequest', auth.auth, isAdmin, seller.RejectRequest);
 
 // admin

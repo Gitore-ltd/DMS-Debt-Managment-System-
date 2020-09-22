@@ -5,6 +5,7 @@ import bodyParser from 'body-parser';
 import fs from 'fs';
 import path from 'path';
 import cookieParser from 'cookie-parser';
+import passport from 'passport';
 import upload from 'express-fileupload';
 import routes from './src/routes/route';
 
@@ -17,6 +18,8 @@ app.use(
     useTempFiles: true,
   }),
 );
+
+app.use(passport.initialize());
 
 app.use(cors());
 app.use((req, res, next) => {
