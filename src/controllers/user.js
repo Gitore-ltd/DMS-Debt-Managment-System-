@@ -5,6 +5,7 @@ import userSchema from '../helper/loginValidation';
 import generateToken from '../helper/tokenGenerator';
 import models from '../database/models';
 import generatePswd from '../utils/randomPswd';
+import localStorage from 'localStorage';
 
 dotenv.config();
 
@@ -110,6 +111,14 @@ class userController {
       //   jwtoken: token,
       //   data: newUser,
       // });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+  static async logout(req, res) {
+    try {
+      localStorage.removeItem('token');
+      return res.status(200).json({ status: 200, message: 'Logout successfully' });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
