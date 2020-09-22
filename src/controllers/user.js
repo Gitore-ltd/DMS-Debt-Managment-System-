@@ -5,6 +5,7 @@ import userSchema from '../helper/loginValidation';
 import generateToken from '../helper/tokenGenerator';
 import models from '../database/models';
 import generatePswd from '../utils/randomPswd';
+import localStorage from 'localStorage';
 
 dotenv.config();
 
@@ -96,20 +97,19 @@ class userController {
       });
       if (existingUser !== null) {
         return res.redirect(`${process.env.FRONT_END_URL}/social-login?token=${token}`);
-        // return res.status(200).json({
-        //   message: 'user successfuly logged in',
-        //   jwtoken: token,
-        // });
       }
       const hashedPassword = bcrypt.hashSync(password, 10);
       const newData = { firstName, lastName, email, profileImage, role, password: hashedPassword };
       const newUser = await User.create(newData);
       return res.redirect(`${process.env.FRONT_END_URL}/social-login?token=${token}`);
-      // return res.status(201).json({
-      //   message: 'new user successfuly registered',
-      //   jwtoken: token,
-      //   data: newUser,
-      // });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+  static async logout(req, res) {
+    try {
+      localStorage.removeItem('user-token');
+      return res.status(200).json({ status: 200, message: 'Logout successfully' });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }

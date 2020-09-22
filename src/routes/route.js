@@ -13,7 +13,7 @@ import passport from '../config/passport';
 
 const route = express.Router();
 
-const { socialLogin } = userController;
+const { socialLogin, logout } = userController;
 
 // registration
 route.post('/api/v1/auth/signup', userController.signup);
@@ -58,5 +58,8 @@ route.patch('/api/v1/RejectRequest', auth.auth, isAdmin, seller.RejectRequest);
 route.get('/api/v1/findAll', auth.auth, isSuperAdmin, userProfile.findAllUser);
 route.delete('/api/v1/deleteUser', auth.auth, isSuperAdmin, userProfile.deleteUser);
 route.patch('/api/v1/updateRole', auth.auth, isAdmin, userProfile.updateUserRole);
+
+// logout
+route.patch('/auth/logout', auth.auth, logout);
 
 export default route;
