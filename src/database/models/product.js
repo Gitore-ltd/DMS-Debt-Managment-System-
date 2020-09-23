@@ -1,6 +1,4 @@
-const {
-  Model,
-} = require('sequelize');
+const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   class Product extends Model {
@@ -16,22 +14,26 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
   }
-  Product.init({
-    productId: {
-      type: DataTypes.STRING,
-      primaryKey: true,
+  Product.init(
+    {
+      productId: {
+        type: DataTypes.STRING,
+        primaryKey: true,
+      },
+      email: DataTypes.STRING,
+      title: DataTypes.STRING,
+      quality: DataTypes.INTEGER,
+      availableQuantity: DataTypes.INTEGER,
+      unit: DataTypes.STRING,
+      price: DataTypes.INTEGER,
+      productImage: DataTypes.STRING,
+      description: DataTypes.STRING,
+      address: DataTypes.STRING,
     },
-    email: DataTypes.STRING,
-    title: DataTypes.STRING,
-    quality: DataTypes.INTEGER,
-    availableQuantity: DataTypes.INTEGER,
-    unit: DataTypes.STRING,
-    price: DataTypes.INTEGER,
-    productImage: DataTypes.STRING,
-    description: DataTypes.STRING,
-  }, {
-    sequelize,
-    modelName: 'Product',
-  });
+    {
+      sequelize,
+      modelName: 'Product',
+    },
+  );
   return Product;
 };

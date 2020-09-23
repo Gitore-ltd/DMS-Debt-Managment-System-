@@ -6,6 +6,7 @@
   "scripts": {
     "start": "nodemon server.js",
     "createTables": "sequelize db:migrate:undo:all && sequelize db:migrate && sequelize db:seed:all",
+    "dropTables": "sequelize db:migrate:undo:all",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -46,6 +47,7 @@
     "nodemon": "^2.0.4",
     "passport": "^0.4.1",
     "passport-google-oauth20": "^2.0.0",
+    "passport-instagram": "^1.0.0",
     "path": "^0.12.7",
     "pg": "^8.3.0",
     "pg-hstore": "^2.3.3",

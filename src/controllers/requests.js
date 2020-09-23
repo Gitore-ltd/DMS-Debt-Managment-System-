@@ -6,9 +6,7 @@ class requests {
   static async requestLoan(req, res) {
     const user = await User.findOne({ where: { email: req.user.email } });
 
-    const {
-      title, quality, quantity, tobePayed,
-    } = req.body;
+    const { title, quality, quantity, tobePayed } = req.body;
 
     const product = await Product.findOne({ where: { title: req.body.title } });
 
@@ -28,6 +26,7 @@ class requests {
       requestedProductId: product.dataValues.productId,
       productTitle: title,
       price: product.dataValues.price,
+      unit: product.dataValues.unit,
       quality,
       quantity,
       total: quantity * product.dataValues.price,
@@ -52,11 +51,13 @@ class requests {
     }
     await Request.create(reqInfo)
       .then(() => Request.findOne({ where: { productTitle: title } }))
-      .then(() => res.status(200).json({
-        status: 200,
-        messsage: 'request successfuly submited!',
-        reqInfo,
-      }));
+      .then(() =>
+        res.status(200).json({
+          status: 200,
+          messsage: 'request successfuly submited!',
+          reqInfo,
+        }),
+      );
   }
 
   static async myRequests(req, res) {

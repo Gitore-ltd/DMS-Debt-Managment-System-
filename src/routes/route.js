@@ -20,14 +20,18 @@ route.post('/api/v1/auth/signup', userController.signup);
 route.post('/api/v1/auth/login', userController.login);
 
 // social logins
+
 route.get('/auth/login/socialLogin', (req, res) => {
   res.sendFile('socialLogin.html', { root: `${__dirname}/../templates/` });
 });
-route.get(
-  '/auth/login/google',
-  passport.authenticate('google', { scope: ['profile', 'email'], state: 'localhost:3000/home' }),
-);
+
+// social logins - Gmail
+route.get('/auth/login/google',passport.authenticate('google', { scope: ['profile', 'email']}),);
 route.get('/auth/login/google/redirect', passport.authenticate('google'), socialLogin);
+
+// instagram
+route.get('/auth/login/instagram', passport.authenticate('instagram'), socialLogin);
+route.get('/auth/login/instagram/redirect', passport.authenticate('instagram', { scope: ['user_profile', 'user_media']}, { failureRedirect: '/api/v1/auth/login'}), socialLogin);
 
 // profile
 route.get('/api/v1/getProfile', auth.auth, userProfile.getProfile);

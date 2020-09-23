@@ -9,7 +9,8 @@ const productSchema = Joi.object().keys({
   price: Joi.number().required(),
   unit: Joi.string().required(),
   description: Joi.string().required(),
-  productImage: Joi.string().required(),
+  productImage: Joi.string(),
+  address: Joi.string().required(),
 });
 
 export default productSchema;

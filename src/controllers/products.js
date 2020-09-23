@@ -21,19 +21,11 @@ class products {
         imageLink = await cloudinary.uploader.upload(file.tempFilePath);
       }
 
-      const {
-        title,
-        quality,
-        availableQuantity,
-        price,
-        unit,
-        description,
-        productImage
-      } = req.body;
-      let titleInLowerCase = 'no title'
-     if(title){
-       titleInLowerCase = title.toLowerCase();
-     }
+      const { title, quality, availableQuantity, price, unit, description, productImage, address } = req.body;
+      let titleInLowerCase = 'no title';
+      if (title) {
+        titleInLowerCase = title.toLowerCase();
+      }
 
       // let { productImage } = req.body;
       // productImage = imageLink ? imageLink.url : 'no image found';
@@ -48,12 +40,11 @@ class products {
         price,
         description,
         productImage,
+        address,
       });
 
       if (product.error) {
-        return res
-          .status(400)
-          .json({ status: 400, error: product.error.details[0].message });
+        return res.status(400).json({ status: 400, error: product.error.details[0].message });
       }
 
       const existingProduct = await Product.findOne({ where: { title: titleInLowerCase } });
@@ -94,14 +85,7 @@ class products {
         const file = req.files.productImage;
         imageLink = await cloudinary.uploader.upload(file.tempFilePath);
       }
-      const {
-        title,
-        quality,
-        availableQuantity,
-        price,
-        unit,
-        description,
-      } = req.body;
+      const { title, quality, availableQuantity, price, unit, description } = req.body;
 
       let { productImage } = req.body;
       productImage = imageLink ? imageLink.url : 'no image found';
@@ -117,9 +101,7 @@ class products {
       });
 
       if (product.error) {
-        return res
-          .status(400)
-          .json({ status: 400, error: product.error.details[0].message });
+        return res.status(400).json({ status: 400, error: product.error.details[0].message });
       }
 
       const existingProduct = await Product.findOne({ where: { title } });
